@@ -1,0 +1,18 @@
+.book {
+    border: 1px solid var(--background-modifier-border);
+    padding: 10px;
+}
+  
+.book__title {
+  font-weight: 600;
+}
+
+.book__author {
+  color: var(--text-muted);
+}
+
+.addButton {
+  align-items: end;
+  justify-content: end;
+  color: red;
+}
