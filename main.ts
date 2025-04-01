@@ -249,6 +249,7 @@ function addNameColorInSettings(containerEl: HTMLElement) {
 	console.log("addNameColorInSettings")
 
 	new Setting(containerEl)
+			.addColorPicker((colorPicker) => function() {}) 
 			.setName("Name")
 			.addText((text) =>
 				text
@@ -256,19 +257,9 @@ function addNameColorInSettings(containerEl: HTMLElement) {
 					.onChange(async (value) => {
 						this.plugin.settings.name_color[0].key = value;
 						await this.plugin.saveSettings()
-				})
-		);
-
-		new Setting(containerEl)
-			.setName("Color")
-			.addText((text) =>
-				text
-					.setPlaceholder("Color")
-					.onChange(async (value) => {
-						this.plugin.settings.name_color[0].value = value;
-						// NAME_COLOR.Alex = value;
-						await this.plugin.saveSettings()
-				})
+					}
+				)
+			
 		);
 
 		const divider = containerEl.createEl("div", { cls: "divider" });
@@ -286,13 +277,13 @@ class SampleSettingTab extends PluginSettingTab {
 		const {containerEl} = this;
 		containerEl.empty();
 
-		// const addNameColorButt on = containerEl.createEl("button", {cls: "addButton", text:"+", })
 		new Setting(containerEl).addButton((button) => addNameColorButton(containerEl, button))
+		// new Setting(containerEl).addColorPicker((colorPicker) => function() {}) 
 
 		const divider = containerEl.createEl("div", { cls: "divider" });
 		for (let index = 0; index < this.plugin.settings.name_color.length; index++) {
 			addNameColorInSettings(containerEl)
 		}	
-			
+
 	}
 }
