@@ -1,6 +1,6 @@
 import { notDeepEqual } from 'assert';
 import { it } from 'node:test';
-import { App, Editor, ItemView, WorkspaceLeaf, EditorPosition, EditorSelection, moment, MarkdownView, Modal, Notice, Plugin, PluginSettingTab, Setting, Menu, iterateRefs, View, editorEditorField } from 'obsidian';
+import { App, Editor, ItemView, WorkspaceLeaf, EditorPosition, EditorSelection, moment, MarkdownView, Modal, Notice, Plugin, PluginSettingTab, Setting, Menu, iterateRefs, View, editorEditorField, ButtonComponent } from 'obsidian';
 import { cursorTo } from 'readline';
 import { isSymbolObject } from 'util/types';
 import { updateColors, testCommand, mergeAlternately, bookMarkAllBeginningWithProvided } from 'functions';
@@ -17,7 +17,7 @@ interface MyPluginSettings {
 const DEFAULT_SETTINGS: MyPluginSettings = {
 	mySetting: 'default',
 	name: '#fef65b',
-	name_color: [{"Jolyne": "green"}, {"Joseph":"brown"}, {"Johnny":"Blue"}, {"Jotaro":"Red"}]
+	name_color: [{"Jolyne": "green"}, {"Joseph":"brown"}]
 }
 
 const NAME_COLOR: Record<string,string> = {
@@ -234,12 +234,20 @@ class SampleModal extends Modal {
 	}
 }
 
-function addNameColorButton(containerEl: HTMLElement) {
-	this.plugin.settings.name_color.push(["",""])
-	addNameColorInSettings(containerEl)
+function addNameColorButton(containerEl: HTMLElement, button: ButtonComponent){
+	button
+		.setButtonText("Add")
+		.onClick(async () => {
+			// this.plugin.settings.name_color.push({"" : ""})
+			addNameColorInSettings(containerEl)
+		})
+		.setClass("mod-cta")
 }
 
+
 function addNameColorInSettings(containerEl: HTMLElement) {
+	console.log("addNameColorInSettings")
+
 	new Setting(containerEl)
 			.setName("Name")
 			.addText((text) =>
@@ -274,18 +282,17 @@ class SampleSettingTab extends PluginSettingTab {
 		this.plugin = plugin;
 	}
 
+	
+
 	display(): void {
 		const {containerEl} = this;
 		containerEl.empty();
 
 		// const addNameColorButt on = containerEl.createEl("button", {cls: "addButton", text:"+", })
-		new Setting(containerEl).addButton((button) => addNameColorButton)
-		addNameColorButton
-
+		new Setting(containerEl).addButton((button) => addNameColorButton(containerEl, button))
 		
 		for (let index = 0; index < this.plugin.settings.name_color.length; index++) {
 			addNameColorInSettings(containerEl)
-			
 		}
 
 		
