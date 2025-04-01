@@ -3,7 +3,7 @@ import { it } from 'node:test';
 import { App, Editor, ItemView, WorkspaceLeaf, EditorPosition, EditorSelection, moment, MarkdownView, Modal, Notice, Plugin, PluginSettingTab, Setting, Menu, iterateRefs, View, editorEditorField, ButtonComponent } from 'obsidian';
 import { cursorTo } from 'readline';
 import { isSymbolObject } from 'util/types';
-import { updateColors, testCommand, mergeAlternately, bookMarkAllBeginningWithProvided } from 'functions';
+import { updateColors, bookMarkAllBeginningWithProvided } from 'functions';
 
 export const VIEW_TYPE_EXAMPLE = "example-view";
 
@@ -19,13 +19,6 @@ const DEFAULT_SETTINGS: MyPluginSettings = {
 	name: '#fef65b',
 	name_color: [{"Jolyne": "green"}, {"Joseph":"brown"}]
 }
-
-const NAME_COLOR: Record<string,string> = {
-	// "Johnny": "yellow",
-	// "Gyro": "pink",
-	// "Jotaro": "red",
-}
-
 
 
 export class ExampleView extends ItemView {
@@ -80,7 +73,7 @@ export class ExampleView extends ItemView {
 
   }
 
-export default class SecondPlugin extends Plugin {
+export default class ColoredNamesPlugin extends Plugin {
 	settings: MyPluginSettings;
 	
 	async onload() {
@@ -165,7 +158,7 @@ export default class SecondPlugin extends Plugin {
 
 		})
 		// This adds a settings tab so the user can configure various aspects of the plugin
-		this.addSettingTab(new SampleSettingTab(this.app, this));
+		this.addSettingTab(new ColoredNamesSettingTab(this.app, this));
 
 		// If the plugin hooks up any global DOM events (on parts of the app that doesn't belong to this plugin)
 		// Using this function will automatically remove the event listener when this plugin is disabled.
@@ -263,10 +256,10 @@ function addNameColorInSettings(containerEl: HTMLElement) {
 		const divider = containerEl.createEl("div", { cls: "divider" });
 }
 
-class SampleSettingTab extends PluginSettingTab {
-	plugin: SecondPlugin;
+class ColoredNamesSettingTab extends PluginSettingTab {
+	plugin: ColoredNamesPlugin;
 
-	constructor(app: App, plugin: SecondPlugin) {
+	constructor(app: App, plugin: ColoredNamesPlugin) {
 		super(app, plugin);
 		this.plugin = plugin;
 	}
