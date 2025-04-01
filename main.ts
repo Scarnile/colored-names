@@ -9,14 +9,10 @@ export const VIEW_TYPE_EXAMPLE = "example-view";
 
 
 interface MyPluginSettings {
-	mySetting: string;
-	name: string;
 	name_color: Record<string,string>[];
 }
 
 const DEFAULT_SETTINGS: MyPluginSettings = {
-	mySetting: 'default',
-	name: '#fef65b',
 	name_color: [{"Jolyne": "green"}, {"Joseph":"brown"}]
 }
 
@@ -81,7 +77,7 @@ export default class ColoredNamesPlugin extends Plugin {
 		
 		
 		const ribbonIconEl = this.addRibbonIcon("dice","Test Command", (evt: MouseEvent) => {
-			testCommand()
+			// testCommand()
 		})
 
 		this.addCommand({
@@ -129,7 +125,7 @@ export default class ColoredNamesPlugin extends Plugin {
 			id:"test-command",
 			name:"Test Command",
 			editorCallback: (editor:Editor) => {
-				testCommand()
+				// testCommand()
 			}
 		})
 		
