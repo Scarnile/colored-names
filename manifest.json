@@ -3,8 +3,8 @@
 	"name": "Colored Names",
 	"version": "1.0.0",
 	"minAppVersion": "0.15.0",
-	"description": "My second shot on doing the plugin tutorial.",
-	"author": "Obsidian",
+	"description": "A plugin to update colors in your vault",
+	"author": "Scarnile",
 	"authorUrl": "https://obsidian.md",
 	"fundingUrl": "https://obsidian.md/pricing",
 	"isDesktopOnly": false

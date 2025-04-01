@@ -238,7 +238,7 @@ function addNameColorButton(containerEl: HTMLElement, button: ButtonComponent){
 	button
 		.setButtonText("Add")
 		.onClick(async () => {
-			// this.plugin.settings.name_color.push({"" : ""})
+			this.plugin.settings.name_color.push({"" : ""})
 			addNameColorInSettings(containerEl)
 		})
 		.setClass("mod-cta")
@@ -259,9 +259,7 @@ function addNameColorInSettings(containerEl: HTMLElement) {
 						await this.plugin.saveSettings()
 					}
 				)
-			
 		);
-
 		const divider = containerEl.createEl("div", { cls: "divider" });
 }
 
@@ -278,7 +276,6 @@ class SampleSettingTab extends PluginSettingTab {
 		containerEl.empty();
 
 		new Setting(containerEl).addButton((button) => addNameColorButton(containerEl, button))
-		// new Setting(containerEl).addColorPicker((colorPicker) => function() {}) 
 
 		const divider = containerEl.createEl("div", { cls: "divider" });
 		for (let index = 0; index < this.plugin.settings.name_color.length; index++) {
