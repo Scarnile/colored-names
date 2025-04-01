@@ -271,7 +271,7 @@ function addNameColorInSettings(containerEl: HTMLElement) {
 				})
 		);
 
-		const book = containerEl.createEl("div", { cls: "book" });
+		const divider = containerEl.createEl("div", { cls: "divider" });
 }
 
 class SampleSettingTab extends PluginSettingTab {
@@ -282,20 +282,17 @@ class SampleSettingTab extends PluginSettingTab {
 		this.plugin = plugin;
 	}
 
-	
-
 	display(): void {
 		const {containerEl} = this;
 		containerEl.empty();
 
 		// const addNameColorButt on = containerEl.createEl("button", {cls: "addButton", text:"+", })
 		new Setting(containerEl).addButton((button) => addNameColorButton(containerEl, button))
-		
+
+		const divider = containerEl.createEl("div", { cls: "divider" });
 		for (let index = 0; index < this.plugin.settings.name_color.length; index++) {
 			addNameColorInSettings(containerEl)
-		}
-
-		
-	
+		}	
+			
 	}
 }

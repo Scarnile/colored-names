@@ -1,15 +1,9 @@
-.book {
+.divider {
     border: 1px solid var(--background-modifier-border);
-    padding: 10px;
-}
-  
-.book__title {
-  font-weight: 600;
+    padding: 5px;
+    background-color: rgb(20, 20, 20);
 }
 
-.book__author {
-  color: var(--text-muted);
-}
 
 .addButton {
   align-items: end;
