@@ -7,13 +7,17 @@ import { updateColors, bookMarkAllBeginningWithProvided } from 'functions';
 
 export const VIEW_TYPE_EXAMPLE = "example-view";
 
+type NameColor = {
+	name: string
+	color: string
+}
 
 interface MyPluginSettings {
-	name_color: Record<string,string>[];
+	name_color: NameColor[];
 }
 
 const DEFAULT_SETTINGS: MyPluginSettings = {
-	name_color: [{"Jolyne": "green"}, {"Joseph":"brown"}]
+	name_color: [{name: "Jolyne", color: "green"}, {name: "Joseph", color: "brown"}]
 }
 
 
@@ -199,45 +203,27 @@ export default class ColoredNamesPlugin extends Plugin {
 	}
 }
 
-class SampleModal extends Modal {
-	constructor(app: App) {
-		super(app);
-	}
-
-	onOpen() {
-		const {contentEl} = this;
-		contentEl.setText('Woah!');
-	}
-
-	onClose() {
-		const {contentEl} = this;
-		contentEl.empty();
-	}
-}
-
-
 
 function addNameColorInSettings(settingTab: ColoredNamesSettingTab,containerEl:HTMLElement, index: number) {
-	console.log(settingTab.plugin.settings)
 	
 	new Setting(containerEl)
 		.setName("Name")
 		.addColorPicker((colorPicker) => function() {})
 		.addText((text) => text
 			.setPlaceholder("Name")
-			
-			.setValue(Object.keys(settingTab.plugin.settings.name_color[index]).toString())
+			.setValue(settingTab.plugin.settings.name_color[index].name)
 			.onChange(async (value) => {
 				// this.plugin.settings.name_color[index].key = value;
-				console.log(settingTab.plugin.settings)
+				
+				// settingTab.plugin.settings.name_color[index] = value
+				
+				console.log(settingTab.plugin.settings.name_color[index].name)
 
-				await this.plugin.saveSettings()
+				// await settingTab.plugin.saveSettings()
 			}
 		)
 	);
 }
-
-
 
 class ColoredNamesSettingTab extends PluginSettingTab {
 	plugin: ColoredNamesPlugin;
