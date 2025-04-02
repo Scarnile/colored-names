@@ -1,6 +1,6 @@
 import { notDeepEqual } from 'assert';
 import { it } from 'node:test';
-import { App, Editor, ItemView, WorkspaceLeaf, EditorPosition, EditorSelection, moment, MarkdownView, Modal, Notice, Plugin, PluginSettingTab, Setting, Menu, iterateRefs, View, editorEditorField, ButtonComponent } from 'obsidian';
+import { App, Editor, ItemView, WorkspaceLeaf, EditorPosition, EditorSelection, moment, MarkdownView, Modal, Notice, Plugin, PluginSettingTab, Setting, Menu, iterateRefs, View, editorEditorField, ButtonComponent, HexString } from 'obsidian';
 import { cursorTo } from 'readline';
 import { isSymbolObject } from 'util/types';
 import { updateColors, bookMarkAllBeginningWithProvided } from 'functions';
@@ -9,7 +9,7 @@ export const VIEW_TYPE_EXAMPLE = "example-view";
 
 type NameColor = {
 	name: string
-	color: string
+	color: HexString
 }
 
 interface MyPluginSettings {
@@ -17,9 +17,8 @@ interface MyPluginSettings {
 }
 
 const DEFAULT_SETTINGS: MyPluginSettings = {
-	name_color: [{name: "Jolyne", color: "green"}, {name: "Joseph", color: "brown"}]
+	name_color: [{name: "Jolyne", color: "##11ff6c" }, {name: "Joseph", color: "#be7026"}]
 }
-
 
 export class ExampleView extends ItemView {
 	constructor(leaf: WorkspaceLeaf) {
@@ -217,7 +216,13 @@ function addNameColorInSettings(settingTab: ColoredNamesSettingTab,containerEl:H
 	
 	new Setting(containerEl)
 		.setName("Name")
-		.addColorPicker((colorPicker) => function() {})
+		.addColorPicker((colorPicker) => colorPicker
+			.setValue(settingTab.plugin.settings.name_color[index].color)
+			.onChange(async (value) => {
+				settingTab.plugin.settings.name_color[index].color = value
+				await settingTab.plugin.saveSettings()
+			})
+		)	
 		.addText((text) => text
 			.setPlaceholder("Name")
 			.setValue(settingTab.plugin.settings.name_color[index].name)
@@ -248,7 +253,7 @@ class ColoredNamesSettingTab extends PluginSettingTab {
 		new Setting(containerEl).addButton((button) => { button
 			.setButtonText("Add")
 			.onClick(async () => {
-				addNameColorInSettings(this,containerEl, null)
+				addNameColorInSettings(this, containerEl, null)
 			})
 		})
 
