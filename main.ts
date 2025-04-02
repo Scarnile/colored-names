@@ -125,10 +125,10 @@ export default class ColoredNamesPlugin extends Plugin {
 			id:"test-command",
 			name:"Test Command",
 			editorCallback: (editor:Editor) => {
-				// testCommand()
+				console.dir(document)
 			}
 		})
-		
+
 		this.addCommand({
 			id:"bookMarkAllBeginningWithProvided",
 			name:"bookMarkAllBeginningWithProvided",
@@ -153,25 +153,17 @@ export default class ColoredNamesPlugin extends Plugin {
 			
 
 		})
-		// This adds a settings tab so the user can configure various aspects of the plugin
+		
 		this.addSettingTab(new ColoredNamesSettingTab(this.app, this));
-
-		// If the plugin hooks up any global DOM events (on parts of the app that doesn't belong to this plugin)
-		// Using this function will automatically remove the event listener when this plugin is disabled.
-		// this.registerDomEvent(document, 'click', (evt: MouseEvent) => {
-		// 	console.log('click', evt);
-		// });
 
 		// When registering intervals, this function will automatically clear the interval when the plugin is disabled.
 		// this.registerInterval(window.setInterval(() => {
 		// 	const editor = this.app.workspace.activeEditor?.editor!;
 
-		// 	testCommand()
 		// 	// console.log('setInterval')
-		// 	// updateColors(NAME_COLOR, editor)
+		// 	// updateColors(NAME_COLOR, editor) 
 			
 		// }, 0.1 * 1000)); //Every x Seconds
-
 
 	}
 
@@ -223,34 +215,27 @@ class SampleModal extends Modal {
 	}
 }
 
-function addNameColorButton(containerEl: HTMLElement, button: ButtonComponent){
-	button
-		.setButtonText("Add")
-		.onClick(async () => {
-			this.plugin.settings.name_color.push({"" : ""})
-			addNameColorInSettings(containerEl)
-		})
-		.setClass("mod-cta")
-}
 
 
-function addNameColorInSettings(containerEl: HTMLElement) {
-	console.log("addNameColorInSettings")
-
+function addNameColorInSettings(settingTab: ColoredNamesSettingTab,containerEl:HTMLElement, index: number) {
 	new Setting(containerEl)
-			.addColorPicker((colorPicker) => function() {}) 
-			.setName("Name")
-			.addText((text) =>
-				text
-					.setPlaceholder("Name")
-					.onChange(async (value) => {
-						this.plugin.settings.name_color[0].key = value;
-						await this.plugin.saveSettings()
-					}
-				)
-		);
-		const divider = containerEl.createEl("div", { cls: "divider" });
+		.setName("Name")
+		// .addTextArea((textArea) => {})
+		.addColorPicker((colorPicker) => function() {})
+		.addText((text) => text
+			.setPlaceholder("Name")
+			// .setValue(settingTab.plugin.settings.name_color[index].key)
+			.onChange(async (value) => {
+				// this.plugin.settings.name_color[index].key = value;
+				console.log(settingTab.plugin.settings)
+
+				await this.plugin.saveSettings()
+			}
+		)
+	);
 }
+
+
 
 class ColoredNamesSettingTab extends PluginSettingTab {
 	plugin: ColoredNamesPlugin;
@@ -264,12 +249,21 @@ class ColoredNamesSettingTab extends PluginSettingTab {
 		const {containerEl} = this;
 		containerEl.empty();
 
-		new Setting(containerEl).addButton((button) => addNameColorButton(containerEl, button))
+		new Setting(containerEl).addButton((button) => {
+			button.setButtonText("Add")
+			.onClick(async () => {
+				addNameColorInSettings(this,containerEl,1)
+			})
+		})
 
 		const divider = containerEl.createEl("div", { cls: "divider" });
 		for (let index = 0; index < this.plugin.settings.name_color.length; index++) {
-			addNameColorInSettings(containerEl)
+			addNameColorInSettings(this, containerEl, index)
+			console.log(index)
+
+			
 		}	
 
 	}
+
 }
