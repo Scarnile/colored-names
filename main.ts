@@ -218,13 +218,15 @@ class SampleModal extends Modal {
 
 
 function addNameColorInSettings(settingTab: ColoredNamesSettingTab,containerEl:HTMLElement, index: number) {
+	console.log(settingTab.plugin.settings)
+	
 	new Setting(containerEl)
 		.setName("Name")
-		// .addTextArea((textArea) => {})
 		.addColorPicker((colorPicker) => function() {})
 		.addText((text) => text
 			.setPlaceholder("Name")
-			// .setValue(settingTab.plugin.settings.name_color[index].key)
+			
+			.setValue(Object.keys(settingTab.plugin.settings.name_color[index]).toString())
 			.onChange(async (value) => {
 				// this.plugin.settings.name_color[index].key = value;
 				console.log(settingTab.plugin.settings)
@@ -249,8 +251,8 @@ class ColoredNamesSettingTab extends PluginSettingTab {
 		const {containerEl} = this;
 		containerEl.empty();
 
-		new Setting(containerEl).addButton((button) => {
-			button.setButtonText("Add")
+		new Setting(containerEl).addButton((button) => { button
+			.setButtonText("Add")
 			.onClick(async () => {
 				addNameColorInSettings(this,containerEl,1)
 			})
@@ -259,9 +261,6 @@ class ColoredNamesSettingTab extends PluginSettingTab {
 		const divider = containerEl.createEl("div", { cls: "divider" });
 		for (let index = 0; index < this.plugin.settings.name_color.length; index++) {
 			addNameColorInSettings(this, containerEl, index)
-			console.log(index)
-
-			
 		}	
 
 	}
