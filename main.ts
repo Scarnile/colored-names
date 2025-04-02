@@ -204,7 +204,18 @@ export default class ColoredNamesPlugin extends Plugin {
 }
 
 
-function addNameColorInSettings(settingTab: ColoredNamesSettingTab,containerEl:HTMLElement, index: number) {
+function addNameColorInSettings(settingTab: ColoredNamesSettingTab,containerEl:HTMLElement, index: number | null) {
+
+	
+	let nameColor = settingTab.plugin.settings.name_color
+
+	if (index == null) {
+		console.log(nameColor)
+
+		nameColor.push({name: "a", color: "red"})
+		return
+	}
+
 	
 	new Setting(containerEl)
 		.setName("Name")
@@ -217,7 +228,7 @@ function addNameColorInSettings(settingTab: ColoredNamesSettingTab,containerEl:H
 				
 				// settingTab.plugin.settings.name_color[index] = value
 				
-				console.log(settingTab.plugin.settings.name_color[index].name)
+				// console.log(settingTab.plugin.settings.name_color[index].name)
 
 				// await settingTab.plugin.saveSettings()
 			}
@@ -237,10 +248,13 @@ class ColoredNamesSettingTab extends PluginSettingTab {
 		const {containerEl} = this;
 		containerEl.empty();
 
+		// console.log(this.plugin.settings.name_color)
+		
+
 		new Setting(containerEl).addButton((button) => { button
 			.setButtonText("Add")
 			.onClick(async () => {
-				addNameColorInSettings(this,containerEl,1)
+				addNameColorInSettings(this,containerEl, null)
 			})
 		})
 
