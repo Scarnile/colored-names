@@ -210,8 +210,6 @@ function addNameColorInSettings(settingTab: ColoredNamesSettingTab,containerEl:H
 	let nameColor = settingTab.plugin.settings.name_color
 
 	if (index == null) {
-		console.log(nameColor)
-
 		nameColor.push({name: "a", color: "red"})
 		return
 	}
@@ -223,14 +221,10 @@ function addNameColorInSettings(settingTab: ColoredNamesSettingTab,containerEl:H
 		.addText((text) => text
 			.setPlaceholder("Name")
 			.setValue(settingTab.plugin.settings.name_color[index].name)
-			.onChange(async (value) => {
-				// this.plugin.settings.name_color[index].key = value;
-				
-				// settingTab.plugin.settings.name_color[index] = value
-				
-				// console.log(settingTab.plugin.settings.name_color[index].name)
-
-				// await settingTab.plugin.saveSettings()
+			.onChange(async (value) => {				
+				settingTab.plugin.settings.name_color[index].name = value
+				console.log(settingTab.plugin.settings.name_color[index].name)
+				await settingTab.plugin.saveSettings()
 			}
 		)
 	);
