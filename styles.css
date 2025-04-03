@@ -4,6 +4,10 @@
     background-color: rgb(20, 20, 20);
 }
 
+.nameColorRow {
+  margin-bottom: 7px;
+}
+
 .addButton {
   align-items: end;
   justify-content: end;

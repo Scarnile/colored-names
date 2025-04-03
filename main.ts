@@ -210,11 +210,12 @@ function addNameColorInSettings(settingTab: ColoredNamesSettingTab, containerEl:
 	if (isButton) {
 		nameColor.push({name: "", color: "#ffffff"})
 		index = nameColor.length - 1
-		
 	}
 
+	const nameColorRow = containerEl.createDiv({cls: "nameColorRow"})
 
-	new Setting(containerEl)
+
+	new Setting(nameColorRow)
 	.setName("Name")
 	.addColorPicker((colorPicker) => colorPicker
 		.setValue(nameColor[index].color)
@@ -235,12 +236,14 @@ function addNameColorInSettings(settingTab: ColoredNamesSettingTab, containerEl:
 		.setButtonText("-")
 		.setClass("removeButton")
 		.onClick((evt: MouseEvent) => {
-			nameColor.splice(index)
-			
+			const rows = containerEl.getElementsByClassName("nameColorRow")
+			nameColor.splice(index, 1)
+			settingTab.plugin.saveSettings()
+			rows[index].remove()
 		})
 	})
 	
-	console.log(settingTab.plugin.settings.name_color[index] + ": " + index)
+	// console.log(settingTab.plugin.settings.name_color[index] + ": " + index)
 
 }
 	
@@ -267,7 +270,7 @@ class ColoredNamesSettingTab extends PluginSettingTab {
 			})
 		})
 
-		const divider = containerEl.createEl("div", { cls: "divider" });
+		// const divider = containerEl.createEl("div", { cls: "divider" });
 		
 		// Load all saved 
 		for (let index = 0; index < this.plugin.settings.name_color.length; index++) {
