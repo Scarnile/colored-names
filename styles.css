@@ -8,13 +8,11 @@
   margin-bottom: 7px;
 }
 
-.addButton {
-  align-items: end;
-  justify-content: end;
-  color: red;
+button:not(.clickable-icon).addButton {
+  background-color: rgb(39, 105, 39);
 }
 
 
 button:not(.clickable-icon).removeButton {
-  background-color: rgb(138, 16, 16);
+  color: rgb(236, 75, 75);
 }

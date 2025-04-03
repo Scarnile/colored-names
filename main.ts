@@ -124,8 +124,7 @@ export default class ColoredNamesPlugin extends Plugin {
 		})
 
 		this.addCommand({
-			id:"test-command",
-			name:"Test Command",
+			id:"test-command",			name:"Test Command",
 			editorCallback: (editor:Editor) => {
 				console.dir(document)
 			}
@@ -213,10 +212,7 @@ function addNameColorInSettings(settingTab: ColoredNamesSettingTab, containerEl:
 		index = nameColor.length - 1
 	}
 
-	let nameColorRow = containerEl.createDiv({cls: "nameColorRow"})
-
-
-	new Setting(nameColorRow)
+	new Setting(containerEl)
 	.setName("Name")
 	.addColorPicker((colorPicker) => colorPicker
 		.setValue(nameColor[index].color)
@@ -234,17 +230,16 @@ function addNameColorInSettings(settingTab: ColoredNamesSettingTab, containerEl:
 		})
 	)
 	.addButton((button) => { button
-		.setButtonText("-")
+		.setIcon("trash")
 		.setClass("removeButton")
 		.onClick((evt: MouseEvent) => {
-			console.log("Pressed!")
-			let rows = containerEl.getElementsByClassName("nameColorRow")
 			nameColor.splice(index, 1)
 			settingTab.display()
 			settingTab.plugin.saveSettings()
 		})
 	})
 	
+
 	// console.log(settingTab.plugin.settings.name_color[index] + ": " + index)
 
 }
@@ -261,22 +256,25 @@ class ColoredNamesSettingTab extends PluginSettingTab {
 	display(): void {
 		const {containerEl} = this;
 		containerEl.empty();
-
-		// console.log(this.plugin.settings.name_color)
 		
+		const nameColorContainer = containerEl.createDiv({cls: "nameColorContainer"})
+		// Load all saved 
+		for (let index = 0; index < this.plugin.settings.name_color.length; index++) {
+			addNameColorInSettings(this, nameColorContainer, index, false)
+		}	
+
 		new Setting(containerEl).addButton((button) => { button
 			.setButtonText("Add")
+			.setClass("addButton")
+			.setIcon("plus")
 			.onClick(async () => {
-				addNameColorInSettings(this, containerEl, 0, true)
+				addNameColorInSettings(this, nameColorContainer, 0, true)
 			})
 		})
 
 		// const divider = containerEl.createEl("div", { cls: "divider" });
 		
-		// Load all saved 
-		for (let index = 0; index < this.plugin.settings.name_color.length; index++) {
-			addNameColorInSettings(this, containerEl, index, false)
-		}	
+		
 
 	}
 
