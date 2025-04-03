@@ -254,7 +254,7 @@ class ColoredNamesSettingTab extends PluginSettingTab {
 		super(app, plugin);
 		this.plugin = plugin;
 	}
-
+	
 	display(): void {
 		const {containerEl} = this;
 		containerEl.empty();
@@ -265,7 +265,7 @@ class ColoredNamesSettingTab extends PluginSettingTab {
 			addNameColorInSettings(this, nameColorContainer, index, false)
 		}	
 
-		new Setting(containerEl)
+		new Setting(nameColorContainer)
 			.addButton((button) => { button
 			.setButtonText("Add")
 			.setClass("addButton")

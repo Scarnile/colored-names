@@ -16,3 +16,10 @@ button:not(.clickable-icon).addButton {
 button:not(.clickable-icon).removeButton {
   background-color: rgb(216, 47, 47);
 }
+
+.nameColorContainer {
+  background-color: color-mix(in oklab, var(--background-primary) 90%, black 10%);
+  /* filter: brightness(70%); */
+  padding: 20px;
+  z-index: -9999;
+}
