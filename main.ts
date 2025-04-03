@@ -4,6 +4,7 @@ import { App, Editor, ItemView, WorkspaceLeaf, EditorPosition, EditorSelection, 
 import { cursorTo } from 'readline';
 import { isSymbolObject } from 'util/types';
 import { updateColors, bookMarkAllBeginningWithProvided } from 'functions';
+import { getPackedSettings } from 'http2';
 
 export const VIEW_TYPE_EXAMPLE = "example-view";
 
@@ -212,7 +213,7 @@ function addNameColorInSettings(settingTab: ColoredNamesSettingTab, containerEl:
 		index = nameColor.length - 1
 	}
 
-	const nameColorRow = containerEl.createDiv({cls: "nameColorRow"})
+	let nameColorRow = containerEl.createDiv({cls: "nameColorRow"})
 
 
 	new Setting(nameColorRow)
@@ -236,17 +237,17 @@ function addNameColorInSettings(settingTab: ColoredNamesSettingTab, containerEl:
 		.setButtonText("-")
 		.setClass("removeButton")
 		.onClick((evt: MouseEvent) => {
-			const rows = containerEl.getElementsByClassName("nameColorRow")
+			console.log("Pressed!")
+			let rows = containerEl.getElementsByClassName("nameColorRow")
 			nameColor.splice(index, 1)
+			settingTab.display()
 			settingTab.plugin.saveSettings()
-			rows[index].remove()
 		})
 	})
 	
 	// console.log(settingTab.plugin.settings.name_color[index] + ": " + index)
 
 }
-	
 
 
 class ColoredNamesSettingTab extends PluginSettingTab {
