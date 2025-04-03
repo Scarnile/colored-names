@@ -14,5 +14,5 @@ button:not(.clickable-icon).addButton {
 
 
 button:not(.clickable-icon).removeButton {
-  color: rgb(236, 75, 75);
+  background-color: rgb(216, 47, 47);
 }

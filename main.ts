@@ -1,6 +1,6 @@
 import { notDeepEqual } from 'assert';
 import { it } from 'node:test';
-import { App, Editor, ItemView, WorkspaceLeaf, EditorPosition, EditorSelection, moment, MarkdownView, Modal, Notice, Plugin, PluginSettingTab, Setting, Menu, iterateRefs, View, editorEditorField, ButtonComponent, HexString } from 'obsidian';
+import { App, Editor, ItemView, WorkspaceLeaf, EditorPosition, EditorSelection, moment, MarkdownView, Modal, Notice, Plugin, PluginSettingTab, Setting, Menu, iterateRefs, View, editorEditorField, ButtonComponent, HexString, SliderComponent, ToggleComponent, TextComponent } from 'obsidian';
 import { cursorTo } from 'readline';
 import { isSymbolObject } from 'util/types';
 import { updateColors, bookMarkAllBeginningWithProvided } from 'functions';
@@ -87,7 +87,6 @@ export default class ColoredNamesPlugin extends Plugin {
 			editorCallback: (editor: Editor) => {
 				console.log(this.settings.name_color)
 				updateColors(this.settings.name_color, editor)
-				
 			}
 		})
 
@@ -120,7 +119,8 @@ export default class ColoredNamesPlugin extends Plugin {
 		})
 
 		this.addCommand({
-			id:"test-command",			name:"Test Command",
+			id:"test-command",		
+			name:"Test Command",
 			editorCallback: (editor:Editor) => {
 				console.dir(document)
 			}
@@ -259,7 +259,8 @@ class ColoredNamesSettingTab extends PluginSettingTab {
 			addNameColorInSettings(this, nameColorContainer, index, false)
 		}	
 
-		new Setting(containerEl).addButton((button) => { button
+		new Setting(containerEl)
+			.addButton((button) => { button
 			.setButtonText("Add")
 			.setClass("addButton")
 			.setIcon("plus")
@@ -270,7 +271,11 @@ class ColoredNamesSettingTab extends PluginSettingTab {
 
 		// const divider = containerEl.createEl("div", { cls: "divider" });
 		
-		
+		new Setting(containerEl)
+			.setName("Update Every X Seconds")
+			.addToggle((toggle: ToggleComponent) => {})
+			.addText((text: TextComponent) => {})
+			
 
 	}
 
