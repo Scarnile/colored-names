@@ -5,13 +5,9 @@ import { cursorTo } from 'readline';
 import { isSymbolObject } from 'util/types';
 import { updateColors, bookMarkAllBeginningWithProvided } from 'functions';
 import { getPackedSettings } from 'http2';
-
+import {NameColor} from "nameColor";
+ 
 export const VIEW_TYPE_EXAMPLE = "example-view";
-
-type NameColor = {
-	name: string
-	color: HexString
-}
 
 interface MyPluginSettings {
 	name_color: NameColor[];

@@ -1,23 +1,20 @@
 import { Editor } from "obsidian";
 import { App, ItemView, WorkspaceLeaf, EditorPosition, EditorSelection, moment, MarkdownView, Modal, Notice, Plugin, PluginSettingTab, Setting, Menu, iterateRefs, View, editorEditorField } from 'obsidian';
+import {NameColor} from "nameColor"
 
-
-export const updateColors = (NAME_COLOR: Record<string,string>[], editor: Editor): void => {
+export const updateColors = (name_color: NameColor[], editor: Editor): void => {
 
     // Check Every Line
     for (let lineIndex = 0; lineIndex < editor.lineCount(); lineIndex++) {
 
-        // Check Every Set in NAME_COLOR
-        for (let nameColorArrayIndex = 0; nameColorArrayIndex < NAME_COLOR.length; nameColorArrayIndex++) {
+        // Check Every Set in name_color
+        for (let nameColorArrayIndex = 0; nameColorArrayIndex < name_color.length; nameColorArrayIndex++) {
 
             let editorValue = editor.getValue();
             const lineContent = editor.getLine(lineIndex);
             
-            // Check all arrays
-            for (let nameColorSetIndex in Object.keys(NAME_COLOR)) {
-                
-                let charName: string = Object.keys(NAME_COLOR[nameColorArrayIndex])[nameColorSetIndex];
-                let color: string = Object.values(NAME_COLOR[nameColorArrayIndex])[nameColorSetIndex];
+            let charName: string = name_color[nameColorArrayIndex].name;
+                let color: string = name_color[nameColorArrayIndex].color;
 
                 let namePosition = lineContent.indexOf(charName);
                 // If it doesn't have a color
@@ -30,6 +27,11 @@ export const updateColors = (NAME_COLOR: Record<string,string>[], editor: Editor
                     }
                     
                 } 
+
+            // Check all arrays
+            for (let nameColorSetIndex in Object.keys(name_color)) {
+                
+                
             }    
         }  
     } 
