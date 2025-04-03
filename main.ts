@@ -213,25 +213,35 @@ function addNameColorInSettings(settingTab: ColoredNamesSettingTab, containerEl:
 		
 	}
 
-	console.log(settingTab.plugin.settings.name_color[index] + ": " + index)
 
 	new Setting(containerEl)
 	.setName("Name")
 	.addColorPicker((colorPicker) => colorPicker
-		.setValue(settingTab.plugin.settings.name_color[index].color)
+		.setValue(nameColor[index].color)
 		.onChange(async (value) => {
-			settingTab.plugin.settings.name_color[index].color = value
+			nameColor[index].color = value
 			await settingTab.plugin.saveSettings()
 		})
 	)	
 	.addText((text) => text
 		.setPlaceholder("Name")
-		.setValue(settingTab.plugin.settings.name_color[index].name)
+		.setValue(nameColor[index].name)
 		.onChange(async (value) => {				
-			settingTab.plugin.settings.name_color[index].name = value
+			nameColor[index].name = value
 			await settingTab.plugin.saveSettings()
 		})
-	);
+	)
+	.addButton((button) => { button
+		.setButtonText("-")
+		.setClass("removeButton")
+		.onClick((evt: MouseEvent) => {
+			nameColor.splice(index)
+			
+		})
+	})
+	
+	console.log(settingTab.plugin.settings.name_color[index] + ": " + index)
+
 }
 	
 

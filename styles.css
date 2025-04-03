@@ -9,3 +9,8 @@
   justify-content: end;
   color: red;
 }
+
+
+button:not(.clickable-icon).removeButton {
+  background-color: rgb(138, 16, 16);
+}
