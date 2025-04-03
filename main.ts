@@ -11,10 +11,15 @@ export const VIEW_TYPE_EXAMPLE = "example-view";
 
 interface MyPluginSettings {
 	name_color: NameColor[];
+	updatesEveryOtherXSeconds: boolean;
+	secondsEveryUpdate: number,
 }
 
 const DEFAULT_SETTINGS: MyPluginSettings = {
-	name_color: [{name: "Jolyne", color: "##11ff6c" }, {name: "Joseph", color: "#be7026"}]
+	name_color: [{name: "Jolyne", color: "#111ff6c" }, {name: "Joseph", color: "#be7026"}],
+
+	updatesEveryOtherXSeconds: true,
+	secondsEveryUpdate: 5,
 }
 
 export class ExampleView extends ItemView {
@@ -152,15 +157,16 @@ export default class ColoredNamesPlugin extends Plugin {
 		})
 		
 		this.addSettingTab(new ColoredNamesSettingTab(this.app, this));
+		
+		const editor = this.app.workspace.activeEditor?.editor!;
 
-		// When registering intervals, this function will automatically clear the interval when the plugin is disabled.
-		// this.registerInterval(window.setInterval(() => {
-		// 	const editor = this.app.workspace.activeEditor?.editor!;
-
-		// 	// console.log('setInterval')
-		// 	// updateColors(NAME_COLOR, editor) 
-			
-		// }, 0.1 * 1000)); //Every x Seconds
+		if (this.settings.updatesEveryOtherXSeconds) {
+			this.registerInterval(window.setInterval(() => {
+				updateColors(this.settings.name_color, editor) 
+				console.log("AA")
+			}, this.settings.secondsEveryUpdate * 1000)); //Every x Seconds
+		}
+		
 
 	}
 
@@ -273,8 +279,20 @@ class ColoredNamesSettingTab extends PluginSettingTab {
 		
 		new Setting(containerEl)
 			.setName("Update Every X Seconds")
-			.addToggle((toggle: ToggleComponent) => {})
-			.addText((text: TextComponent) => {})
+			.setDesc("Please restart the plugin whenever changing the value or when enabling or disabling it ")
+			.addToggle((toggle: ToggleComponent) => { toggle
+				.setValue(this.plugin.settings.updatesEveryOtherXSeconds)
+				.onChange((value: boolean) => {
+					this.plugin.settings.updatesEveryOtherXSeconds = value
+				})
+			})
+			.addText((text: TextComponent) => { text
+				.setValue(this.plugin.settings.secondsEveryUpdate.toString())
+				.onChange((value: string) => {
+					this.plugin.settings.secondsEveryUpdate = parseInt(value)
+				})
+				
+			})
 			
 
 	}
