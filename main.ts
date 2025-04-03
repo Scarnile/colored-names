@@ -78,7 +78,6 @@ export default class ColoredNamesPlugin extends Plugin {
 	async onload() {
 		await this.loadSettings();
 		
-		
 		const ribbonIconEl = this.addRibbonIcon("dice","Test Command", (evt: MouseEvent) => {
 			// testCommand()
 		})
@@ -109,7 +108,6 @@ export default class ColoredNamesPlugin extends Plugin {
 				if (lineContent.contains('<font style="color:')) {
 					let charName = lineContent.split(">")[1].slice(0, -6);
 					new Notice(charName);
-					
 				}
 
 				//Get Color
@@ -203,37 +201,40 @@ export default class ColoredNamesPlugin extends Plugin {
 }
 
 
-function addNameColorInSettings(settingTab: ColoredNamesSettingTab,containerEl:HTMLElement, index: number | null) {
+function addNameColorInSettings(settingTab: ColoredNamesSettingTab, containerEl:HTMLElement,
+	index: number, isButton: boolean) {
 
-	
 	let nameColor = settingTab.plugin.settings.name_color
 
-	if (index == null) {
-		nameColor.push({name: "a", color: "red"})
-		return
+	// Pressing the button has to create a new name_color
+	if (isButton) {
+		nameColor.push({name: "", color: "#ffffff"})
+		index = nameColor.length - 1
+		
 	}
 
-	
+	console.log(settingTab.plugin.settings.name_color[index] + ": " + index)
+
 	new Setting(containerEl)
-		.setName("Name")
-		.addColorPicker((colorPicker) => colorPicker
-			.setValue(settingTab.plugin.settings.name_color[index].color)
-			.onChange(async (value) => {
-				settingTab.plugin.settings.name_color[index].color = value
-				await settingTab.plugin.saveSettings()
-			})
-		)	
-		.addText((text) => text
-			.setPlaceholder("Name")
-			.setValue(settingTab.plugin.settings.name_color[index].name)
-			.onChange(async (value) => {				
-				settingTab.plugin.settings.name_color[index].name = value
-				console.log(settingTab.plugin.settings.name_color[index].name)
-				await settingTab.plugin.saveSettings()
-			}
-		)
+	.setName("Name")
+	.addColorPicker((colorPicker) => colorPicker
+		.setValue(settingTab.plugin.settings.name_color[index].color)
+		.onChange(async (value) => {
+			settingTab.plugin.settings.name_color[index].color = value
+			await settingTab.plugin.saveSettings()
+		})
+	)	
+	.addText((text) => text
+		.setPlaceholder("Name")
+		.setValue(settingTab.plugin.settings.name_color[index].name)
+		.onChange(async (value) => {				
+			settingTab.plugin.settings.name_color[index].name = value
+			await settingTab.plugin.saveSettings()
+		})
 	);
 }
+	
+
 
 class ColoredNamesSettingTab extends PluginSettingTab {
 	plugin: ColoredNamesPlugin;
@@ -249,17 +250,18 @@ class ColoredNamesSettingTab extends PluginSettingTab {
 
 		// console.log(this.plugin.settings.name_color)
 		
-
 		new Setting(containerEl).addButton((button) => { button
 			.setButtonText("Add")
 			.onClick(async () => {
-				addNameColorInSettings(this, containerEl, null)
+				addNameColorInSettings(this, containerEl, 0, true)
 			})
 		})
 
 		const divider = containerEl.createEl("div", { cls: "divider" });
+		
+		// Load all saved 
 		for (let index = 0; index < this.plugin.settings.name_color.length; index++) {
-			addNameColorInSettings(this, containerEl, index)
+			addNameColorInSettings(this, containerEl, index, false)
 		}	
 
 	}
