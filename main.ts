@@ -280,12 +280,6 @@ class ColoredNamesSettingTab extends PluginSettingTab {
 		new Setting(containerEl)
 			.setName("Update Every X Seconds")
 			.setDesc("Please restart the plugin whenever changing the value or when enabling or disabling it ")
-			.addToggle((toggle: ToggleComponent) => { toggle
-				.setValue(this.plugin.settings.updatesEveryOtherXSeconds)
-				.onChange((value: boolean) => {
-					this.plugin.settings.updatesEveryOtherXSeconds = value
-				})
-			})
 			.addText((text: TextComponent) => { text
 				.setValue(this.plugin.settings.secondsEveryUpdate.toString())
 				.onChange((value: string) => {
@@ -293,6 +287,13 @@ class ColoredNamesSettingTab extends PluginSettingTab {
 				})
 				
 			})
+			.addToggle((toggle: ToggleComponent) => { toggle
+				.setValue(this.plugin.settings.updatesEveryOtherXSeconds)
+				.onChange((value: boolean) => {
+					this.plugin.settings.updatesEveryOtherXSeconds = value
+				})
+			})
+			
 			
 
 	}

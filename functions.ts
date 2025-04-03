@@ -22,7 +22,7 @@ export const updateColors = (name_color: NameColor[], editor: Editor): void => {
                     
                     // If name is the very first word
                     if (namePosition <= 1) {
-                        let updatedLineContent = editor.getLine(lineIndex).replace(charName, `<font style="color:${color}"> ${charName}</font>`)
+                        let updatedLineContent = editor.getLine(lineIndex).replace(charName, `<font style="color:${color}">${charName}</font>`)
                         editor.setLine(lineIndex, updatedLineContent);
                     }
                     
