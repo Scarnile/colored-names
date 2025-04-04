@@ -1,9 +1,9 @@
 import { notDeepEqual } from 'assert';
 import { it } from 'node:test';
-import { App, Editor, ItemView, WorkspaceLeaf, EditorPosition, EditorSelection, moment, MarkdownView, Modal, Notice, Plugin, PluginSettingTab, Setting, Menu, iterateRefs, View, editorEditorField, ButtonComponent, HexString, SliderComponent, ToggleComponent, TextComponent } from 'obsidian';
+import { App, Editor, ItemView, WorkspaceLeaf, EditorPosition, EditorSelection, moment, MarkdownView, Modal, Notice, Plugin, PluginSettingTab, Setting, Menu, iterateRefs, View, editorEditorField, ButtonComponent, HexString, SliderComponent, ToggleComponent, TextComponent, ExtraButtonComponent } from 'obsidian';
 import { cursorTo } from 'readline';
 import { isSymbolObject } from 'util/types';
-import { updateColors, bookMarkAllBeginningWithProvided } from 'functions';
+import { updateColors} from 'functions';
 import { getPackedSettings } from 'http2';
 import {NameColor} from "nameColor";
  
@@ -16,7 +16,10 @@ interface MyPluginSettings {
 }
 
 const DEFAULT_SETTINGS: MyPluginSettings = {
-	name_color: [{name: "Jolyne", color: "#111ff6c" }, {name: "Joseph", color: "#be7026"}],
+	name_color: [
+		{name: "Jolyne", color: "#111ff6c" , caseSensitive: false},
+		{name: "Joseph", color: "#be7026", caseSensitive: false}
+	],
 
 	updatesEveryOtherXSeconds: true,
 	secondsEveryUpdate: 5,
@@ -90,7 +93,6 @@ export default class ColoredNamesPlugin extends Plugin {
 			hotkeys:[{modifiers:["Mod"], key:"q"}],
 
 			editorCallback: (editor: Editor) => {
-				console.log(this.settings.name_color)
 				updateColors(this.settings.name_color, editor)
 			}
 		})
@@ -130,31 +132,6 @@ export default class ColoredNamesPlugin extends Plugin {
 				console.dir(document)
 			}
 		})
-
-		this.addCommand({
-			id:"bookMarkAllBeginningWithProvided",
-			name:"bookMarkAllBeginningWithProvided",
-			editorCallback:(editor: Editor) => {
-				bookMarkAllBeginningWithProvided(editor) 
-
-
-				for (let lineIndex = 0; lineIndex < editor.lineCount(); lineIndex++) {
-					const lineContent = editor.getLine(lineIndex);
-			
-					if (lineContent.startsWith("# -")) {
-						this.app.workspace.on("file-menu", (menu, file) => {
-							
-						})
-						
-						
-			
-					}
-				}
-			}
-
-			
-
-		})
 		
 		this.addSettingTab(new ColoredNamesSettingTab(this.app, this));
 		
@@ -163,7 +140,6 @@ export default class ColoredNamesPlugin extends Plugin {
 		if (this.settings.updatesEveryOtherXSeconds) {
 			this.registerInterval(window.setInterval(() => {
 				updateColors(this.settings.name_color, editor) 
-				console.log("AA")
 			}, this.settings.secondsEveryUpdate * 1000)); //Every x Seconds
 		}
 		
@@ -210,7 +186,7 @@ function addNameColorInSettings(settingTab: ColoredNamesSettingTab, containerEl:
 
 	// Pressing the button has to create a new name_color
 	if (isButton) {
-		nameColor.push({name: "", color: "#ffffff"})
+		nameColor.push({name: "", color: "#ffffff", caseSensitive: false})
 		index = nameColor.length - 1
 	}
 
@@ -231,6 +207,22 @@ function addNameColorInSettings(settingTab: ColoredNamesSettingTab, containerEl:
 			await settingTab.plugin.saveSettings()
 		})
 	)
+	.addButton((button: ButtonComponent) => { 
+		
+		if (nameColor[index].caseSensitive) {
+			button.setIcon("case-sensitive")
+		} else [
+			button.setIcon("case-lower")
+		]
+
+		button.onClick((evt: MouseEvent) => {
+			nameColor[index].caseSensitive = !nameColor[index].caseSensitive //Toggle
+			settingTab.display()
+			settingTab.plugin.saveSettings()
+		})
+
+		button.setTooltip("Case Sensitive")
+	})
 	.addButton((button) => { button
 		.setIcon("trash")
 		.setClass("removeButton")
@@ -284,6 +276,7 @@ class ColoredNamesSettingTab extends PluginSettingTab {
 				.setValue(this.plugin.settings.secondsEveryUpdate.toString())
 				.onChange((value: string) => {
 					this.plugin.settings.secondsEveryUpdate = parseInt(value)
+					this.plugin.saveSettings()
 				})
 				
 			})
@@ -291,11 +284,8 @@ class ColoredNamesSettingTab extends PluginSettingTab {
 				.setValue(this.plugin.settings.updatesEveryOtherXSeconds)
 				.onChange((value: boolean) => {
 					this.plugin.settings.updatesEveryOtherXSeconds = value
+					this.plugin.saveSettings()
 				})
 			})
-			
-			
-
 	}
-
 }
