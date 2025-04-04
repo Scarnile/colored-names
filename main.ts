@@ -190,8 +190,8 @@ function addNameColorInSettings(settingTab: ColoredNamesSettingTab, containerEl:
 		index = nameColor.length - 1
 	}
 
-	new Setting(containerEl)
-	.setName("Name")
+	let setting = new Setting(containerEl)
+	// .setName("Name")
 	.addColorPicker((colorPicker) => colorPicker
 		.setValue(nameColor[index].color)
 		.onChange(async (value) => {
@@ -221,7 +221,10 @@ function addNameColorInSettings(settingTab: ColoredNamesSettingTab, containerEl:
 			settingTab.plugin.saveSettings()
 		})
 
-		button.setTooltip("Case Sensitive")
+		button
+		.setTooltip("Case Sensitive")
+		.setClass("caseSensitive")
+
 	})
 	.addButton((button) => { button
 		.setIcon("trash")
@@ -232,6 +235,7 @@ function addNameColorInSettings(settingTab: ColoredNamesSettingTab, containerEl:
 			settingTab.plugin.saveSettings()
 		})
 	})
+	
 	
 
 	// console.log(settingTab.plugin.settings.name_color[index] + ": " + index)
@@ -250,14 +254,17 @@ class ColoredNamesSettingTab extends PluginSettingTab {
 	display(): void {
 		const {containerEl} = this;
 		containerEl.empty();
-		
+
 		const nameColorContainer = containerEl.createDiv({cls: "nameColorContainer"})
+
 		// Load all saved 
 		for (let index = 0; index < this.plugin.settings.name_color.length; index++) {
 			addNameColorInSettings(this, nameColorContainer, index, false)
 		}	
-
-		new Setting(nameColorContainer)
+	
+		// Add Button
+		const addButtonContainer = nameColorContainer.createDiv({cls: "addButtonContainer"})
+		new Setting(addButtonContainer)
 			.addButton((button) => { button
 			.setButtonText("Add")
 			.setClass("addButton")
@@ -266,6 +273,18 @@ class ColoredNamesSettingTab extends PluginSettingTab {
 				addNameColorInSettings(this, nameColorContainer, 0, true)
 			})
 		})
+
+		// UI Formatting
+		let settingItem = nameColorContainer.getElementsByClassName("setting-item")
+		
+		for (let index = 0; index < settingItem.length; index++) {
+			let settingItemControl = settingItem[index].getElementsByClassName("setting-item-control")[0]
+			let settingItemInfo = settingItem[index].getElementsByClassName("setting-item-info")[0]
+
+			settingItemInfo.remove()
+		}
+
+		
 
 		// const divider = containerEl.createEl("div", { cls: "divider" });
 		

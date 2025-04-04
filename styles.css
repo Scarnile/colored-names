@@ -21,5 +21,20 @@ button:not(.clickable-icon).removeButton {
   background-color: color-mix(in oklab, var(--background-primary) 90%, black 10%);
   /* filter: brightness(70%); */
   padding: 20px;
-  z-index: -9999;
+  /* display: flex; */
+  /* justify-content: flex-start; */
+}
+
+.addButton {
+  justify-self: start;
+  flex-grow: 3;
+}
+
+.caseSensitive {
+  margin-left: auto;
+  
+}
+
+.addButtonContainer {
+  
 }
