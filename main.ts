@@ -6,20 +6,25 @@ import { isSymbolObject } from 'util/types';
 import { updateColors} from 'functions';
 import { getPackedSettings } from 'http2';
 import {NameColor} from "nameColor";
+import { NameColorGroup } from 'nameColorGroup';
  
 export const VIEW_TYPE_EXAMPLE = "example-view";
 
 interface MyPluginSettings {
-	name_color: NameColor[];
+	nameColor: NameColor[];
+	nameColorGroup: NameColorGroup[]
 	updatesEveryOtherXSeconds: boolean;
 	secondsEveryUpdate: number,
 }
 
 const DEFAULT_SETTINGS: MyPluginSettings = {
-	name_color: [
+	
+	nameColor: [
 		{name: "Jolyne", color: "#111ff6c" , caseSensitive: false},
 		{name: "Joseph", color: "#be7026", caseSensitive: false}
 	],
+
+	nameColorGroup: [],
 
 	updatesEveryOtherXSeconds: true,
 	secondsEveryUpdate: 5,
@@ -93,7 +98,7 @@ export default class ColoredNamesPlugin extends Plugin {
 			hotkeys:[{modifiers:["Mod"], key:"q"}],
 
 			editorCallback: (editor: Editor) => {
-				updateColors(this.settings.name_color, editor)
+				updateColors(this.settings.nameColor, editor)
 			}
 		})
 
@@ -139,7 +144,7 @@ export default class ColoredNamesPlugin extends Plugin {
 
 		if (this.settings.updatesEveryOtherXSeconds) {
 			this.registerInterval(window.setInterval(() => {
-				updateColors(this.settings.name_color, editor) 
+				updateColors(this.settings.nameColor, editor) 
 			}, this.settings.secondsEveryUpdate * 1000)); //Every x Seconds
 		}
 		
@@ -182,9 +187,9 @@ export default class ColoredNamesPlugin extends Plugin {
 function addNameColorInSettings(settingTab: ColoredNamesSettingTab, containerEl:HTMLElement,
 	index: number, isButton: boolean) {
 
-	let nameColor = settingTab.plugin.settings.name_color
+	let nameColor = settingTab.plugin.settings.nameColor
 
-	// Pressing the button has to create a new name_color
+	// Pressing the button has to create a new nameColor
 	if (isButton) {
 		nameColor.push({name: "", color: "#ffffff", caseSensitive: false})
 		index = nameColor.length - 1
@@ -238,7 +243,11 @@ function addNameColorInSettings(settingTab: ColoredNamesSettingTab, containerEl:
 	
 	
 
-	// console.log(settingTab.plugin.settings.name_color[index] + ": " + index)
+	// console.log(settingTab.plugin.settings.nameColor[index] + ": " + index)
+
+}
+
+function addNameColorGroupInSettings(settingTab: ColoredNamesSettingTab, containerEl:HTMLElement) {
 
 }
 
@@ -258,11 +267,11 @@ class ColoredNamesSettingTab extends PluginSettingTab {
 		const nameColorContainer = containerEl.createDiv({cls: "nameColorContainer"})
 
 		// Load all saved 
-		for (let index = 0; index < this.plugin.settings.name_color.length; index++) {
+		for (let index = 0; index < this.plugin.settings.nameColor.length; index++) {
 			addNameColorInSettings(this, nameColorContainer, index, false)
 		}	
 	
-		// Add Button
+		// Add NameColor Button
 		const addButtonContainer = nameColorContainer.createDiv({cls: "addButtonContainer"})
 		new Setting(addButtonContainer)
 			.addButton((button) => { button
@@ -271,6 +280,20 @@ class ColoredNamesSettingTab extends PluginSettingTab {
 			.setIcon("plus")
 			.onClick(async () => {
 				addNameColorInSettings(this, nameColorContainer, 0, true)
+				this.display()
+			})
+		})
+
+		// Add NameColorGroup Button
+		new Setting(addButtonContainer)
+			.addButton((button) => { button
+			.setButtonText("Add")
+			
+			.setClass("addGroupButton")
+			.setIcon("plus")
+			.onClick(async () => {
+				
+				this.display()
 			})
 		})
 
@@ -284,10 +307,7 @@ class ColoredNamesSettingTab extends PluginSettingTab {
 			settingItemInfo.remove()
 		}
 
-		
-
-		// const divider = containerEl.createEl("div", { cls: "divider" });
-		
+				
 		new Setting(containerEl)
 			.setName("Update Every X Seconds")
 			.setDesc("Please restart the plugin whenever changing the value or when enabling or disabling it ")

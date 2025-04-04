@@ -26,15 +26,15 @@ button:not(.clickable-icon).removeButton {
 }
 
 .addButton {
+  margin-top: 10px;
   justify-self: start;
   flex-grow: 3;
 }
 
-.caseSensitive {
-  margin-left: auto;
+.addGroupButton {
   
 }
 
-.addButtonContainer {
-  
+.caseSensitive {
+  margin-left: auto;
 }
