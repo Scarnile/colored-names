@@ -31,38 +31,38 @@ export const updateColors = (name_color: NameColor[], editor: Editor): void => {
                     settingName = lineContent.substring(namePosition)
                     
                     if (lineContent.contains("</font>")) {
+                        console.log(settingName.substring(0, settingName.length - 7))
                     }
 
                 }
             } else {
                 namePosition = lineContent.indexOf(settingName);
             }
-            console.log(settingName)
-            
-            
+                        
 
             // If it has a color, check if the color doesn't match and update it
             if (lineContent.match(syntaxRegex)) {
-                
                 let lineContentColor = lineContent.split('<font style="color:')[1].substring(0, 7);
                 let lineContentName = lineContent.split('<font style="color:' + lineContentColor +'">')[1].slice(0, -7);
+                // console.log(settingName)
 
                 // If name's current color doesn't match settings 
                 if (settingName == lineContentName && settingColor != lineContentColor) {
-                    
                     updatedLineContent = lineContent.replace(lineContentColor, settingColor)
-                    editor.setLine(lineIndex, updatedLineContent);
-                    
                 }
             }
             // If the name in the editor doesn't have a color, give it one
             else if (lineContent.includes(settingName)){ 
                 updatedLineContent = lineContent.replace(settingName, `<font style="color:${settingColor}">${settingName.trim()}</font>`)
-                editor.setLine(lineIndex, updatedLineContent);
 
                 // If name is the very first word
                 // if (namePosition <= 1) {
                 // }
+            }
+
+            // Update line if there were changes made
+            if (updatedLineContent != null) {
+                editor.setLine(lineIndex, updatedLineContent);
             }
             
 
