@@ -20,7 +20,7 @@ interface MyPluginSettings {
 const DEFAULT_SETTINGS: MyPluginSettings = {
 	
 	nameColor: [
-		{name: "Jolyne", color: "#111ff6c" , caseSensitive: false},
+		{name: "Jolyne", color: "#111ff6" , caseSensitive: false},
 		{name: "Joseph", color: "#be7026", caseSensitive: false}
 	],
 
@@ -196,7 +196,7 @@ function addNameColorInSettings(settingTab: ColoredNamesSettingTab, containerEl:
 	}
 
 	let setting = new Setting(containerEl)
-	// .setName("Name")
+
 	.addColorPicker((colorPicker) => colorPicker
 		.setValue(nameColor[index].color)
 		.onChange(async (value) => {
@@ -307,7 +307,7 @@ class ColoredNamesSettingTab extends PluginSettingTab {
 			settingItemInfo.remove()
 		}
 
-				
+		// Update Every X Seconds
 		new Setting(containerEl)
 			.setName("Update Every X Seconds")
 			.setDesc("Please restart the plugin whenever changing the value or when enabling or disabling it ")
@@ -318,7 +318,9 @@ class ColoredNamesSettingTab extends PluginSettingTab {
 					this.plugin.saveSettings()
 				})
 				
+				
 			})
+			
 			.addToggle((toggle: ToggleComponent) => { toggle
 				.setValue(this.plugin.settings.updatesEveryOtherXSeconds)
 				.onChange((value: boolean) => {
