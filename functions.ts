@@ -1,19 +1,43 @@
 import { Editor } from "obsidian";
 import { App, ItemView, WorkspaceLeaf, EditorPosition, EditorSelection, moment, MarkdownView, Modal, Notice, Plugin, PluginSettingTab, Setting, Menu, iterateRefs, View, editorEditorField } from 'obsidian';
 import {NameColor} from "nameColor"
+import test from "node:test";
 
 export const updateColors = (name_color: NameColor[], editor: Editor): void => {
 
+    let settingNames: string[] = []
+
+    // Check Every Set in name_color and convert it into a regex 
+    for (let nameColorArrayIndex = 0; nameColorArrayIndex < name_color.length; nameColorArrayIndex++) {
+        settingNames.push(name_color[nameColorArrayIndex].name)
+    }
+
+    let regexName = new RegExp(settingNames.join("|"), 'gi')
+
+
     // Check Every Line
     for (let lineIndex = 0; lineIndex < editor.lineCount(); lineIndex++) {
+
+        const lineContent = editor.getLine(lineIndex);
+
+
+
+        let matches = lineContent.match(regexName) || []
+
+        for(var matchIndex = 0; matchIndex < matches.length; matchIndex++) {
+            console.log(matches[matchIndex]);
+        }
+
+
+
+
+
+
 
         // Check Every Set in name_color
         for (let nameColorArrayIndex = 0; nameColorArrayIndex < name_color.length; nameColorArrayIndex++) {
 
             let syntaxRegex = /<font style="[^"]*">[A-Za-z0-9]+<\/font>/i
-
-            let editorValue = editor.getValue();
-            const lineContent = editor.getLine(lineIndex);
             
             let settingName: string = name_color[nameColorArrayIndex].name;
             let settingColor: string = name_color[nameColorArrayIndex].color;
@@ -48,12 +72,14 @@ export const updateColors = (name_color: NameColor[], editor: Editor): void => {
 
                 // If name's current color doesn't match settings 
                 if (settingName == lineContentName && settingColor != lineContentColor) {
-                    console.log(settingName)
+                    // console.log(settingName)
                     updatedLineContent = lineContent.replace(lineContentColor, settingColor)
                 }
             }
             // If the name in the editor doesn't have a color, give it one
             else if (lineContent.includes(settingName)){ 
+
+                
                 updatedLineContent = lineContent.replace(settingName, `<font style="color:${settingColor}">${settingName.trim()}</font>`)
 
                 // If name is the very first word
