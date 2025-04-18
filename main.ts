@@ -26,61 +26,11 @@ const DEFAULT_SETTINGS: MyPluginSettings = {
 
 	nameColorGroup: [],
 
-	updatesEveryOtherXSeconds: true,
+	updatesEveryOtherXSeconds: false,
 	secondsEveryUpdate: 5,
 }
 
-export class ExampleView extends ItemView {
-	constructor(leaf: WorkspaceLeaf) {
-	  super(leaf);
-	}
-  
-	getViewType() {
-	  return VIEW_TYPE_EXAMPLE;
-	}
-  
-	getDisplayText() {
-	  return "Example view";
-	}
-  
-	async onOpen() {
-		let viewtype = this.getViewType()
 
-		const container = this.containerEl.children[1];
-		container.empty();
-
-		let editorContent;
-		const editor = this.app.workspace.activeEditor?.editor;
-		
-		let titleButtons = [];
-
-		if (editor != null) {
-			editorContent = editor.getValue();
-			
-			// Checks every line
-			for (let lineIndex = 0; lineIndex < editor.lineCount(); lineIndex++) {
-				const lineContent = editor.getLine(lineIndex);
-				if (lineContent.contains("# -")){
-					var regexp = /-/g;
-					let filteredTitle = lineContent.replace(regexp, "").replace("#", "");
-
-					let titlebutton = container.createEl("button", { text: filteredTitle });
-					titleButtons.push(titlebutton);
-				}
-				
-			}
-		}
-
-		for(let titleButton = 0; titleButton < titleButtons.length; titleButton++) {
-			
-		}
-	}
-  
-	async onClose() {
-	  // Nothing to clean up.
-	}
-
-  }
 
 export default class ColoredNamesPlugin extends Plugin {
 	settings: MyPluginSettings;
@@ -155,24 +105,7 @@ export default class ColoredNamesPlugin extends Plugin {
 
 	}
 
-	async activateView() {
-		const { workspace } = this.app;
-	
-		let leaf: WorkspaceLeaf | null = null;
-		const leaves = workspace.getLeavesOfType(VIEW_TYPE_EXAMPLE);
-	
-		if (leaves.length > 0) {
-		  // A leaf with our view already exists, use that
-		  leaf = leaves[0];
-		} else {
-		  // Our view could not be found in the workspace, create a new leaf
-		  // in the right sidebar for it
-		  leaf = workspace.getRightLeaf(false);
-		  await leaf!.setViewState({ type: VIEW_TYPE_EXAMPLE, active: true });
-		}
-	
-		// "Reveal" the leaf in case it is in a collapsed sidebar
-		workspace.revealLeaf(leaf!);}
+
 
 	async loadSettings() {
 		this.settings = Object.assign({}, DEFAULT_SETTINGS, await this.loadData());
