@@ -31,7 +31,8 @@ export const updateColors = (name_color: NameColor[], editor: Editor): void => {
                     settingName = lineContent.substring(namePosition)
                     
                     if (lineContent.contains("</font>")) {
-                        console.log(settingName.substring(0, settingName.length - 7))
+                        settingName = settingName.substring(0, settingName.length - 7)
+                        // console.log(settingName)
                     }
 
                 }
@@ -44,10 +45,10 @@ export const updateColors = (name_color: NameColor[], editor: Editor): void => {
             if (lineContent.match(syntaxRegex)) {
                 let lineContentColor = lineContent.split('<font style="color:')[1].substring(0, 7);
                 let lineContentName = lineContent.split('<font style="color:' + lineContentColor +'">')[1].slice(0, -7);
-                // console.log(settingName)
 
                 // If name's current color doesn't match settings 
                 if (settingName == lineContentName && settingColor != lineContentColor) {
+                    console.log(settingName)
                     updatedLineContent = lineContent.replace(lineContentColor, settingColor)
                 }
             }
