@@ -6,10 +6,12 @@ import test from "node:test";
 export const updateColors = (name_color: NameColor[], editor: Editor): void => {
 
     let settingNames: string[] = []
+    let settingColors: string[] = []
 
     // Check Every Set in name_color and convert it into a regex 
     for (let nameColorArrayIndex = 0; nameColorArrayIndex < name_color.length; nameColorArrayIndex++) {
         settingNames.push(name_color[nameColorArrayIndex].name)
+        settingColors.push(name_color[nameColorArrayIndex].color)
     }
 
     let regexName = new RegExp(settingNames.join("|"), 'gi')
@@ -20,19 +22,18 @@ export const updateColors = (name_color: NameColor[], editor: Editor): void => {
 
         const lineContent = editor.getLine(lineIndex);
 
-
-
+        // Get all matches
         let matches = lineContent.match(regexName) || []
 
         for(var matchIndex = 0; matchIndex < matches.length; matchIndex++) {
-            console.log(matches[matchIndex]);
+            // console.log(matches[matchIndex]);
+            let currentMatch = matches[matchIndex]
+            
+            let colorIndex = settingNames.indexOf(currentMatch)
+            settingColors[colorIndex]
+
+            console.log(currentMatch + ": " + settingColors[colorIndex])
         }
-
-
-
-
-
-
 
         // Check Every Set in name_color
         for (let nameColorArrayIndex = 0; nameColorArrayIndex < name_color.length; nameColorArrayIndex++) {
