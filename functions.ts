@@ -1,58 +1,99 @@
 import { Editor } from "obsidian";
 import { App, ItemView, WorkspaceLeaf, EditorPosition, EditorSelection, moment, MarkdownView, Modal, Notice, Plugin, PluginSettingTab, Setting, Menu, iterateRefs, View, editorEditorField } from 'obsidian';
 import {NameColor} from "nameColor"
+import test from "node:test";
 
 export const updateColors = (name_color: NameColor[], editor: Editor): void => {
+
+    let settingNames: string[] = []
+    let settingColors: string[] = []
+
+    // Check Every Set in name_color and convert it into a regex 
+    for (let nameColorArrayIndex = 0; nameColorArrayIndex < name_color.length; nameColorArrayIndex++) {
+        settingNames.push(name_color[nameColorArrayIndex].name)
+        settingColors.push(name_color[nameColorArrayIndex].color)
+    }
+
+    let regexName = new RegExp(settingNames.join("|"), 'gi')
+
 
     // Check Every Line
     for (let lineIndex = 0; lineIndex < editor.lineCount(); lineIndex++) {
 
+        const lineContent = editor.getLine(lineIndex);
+
+        // Get all matches
+        let matches = lineContent.match(regexName) || []
+
+        for(var matchIndex = 0; matchIndex < matches.length; matchIndex++) {
+            // console.log(matches[matchIndex]);
+            let currentMatch = matches[matchIndex]
+            
+            let colorIndex = settingNames.indexOf(currentMatch)
+            settingColors[colorIndex]
+
+            console.log(currentMatch + ": " + settingColors[colorIndex])
+        }
+
         // Check Every Set in name_color
         for (let nameColorArrayIndex = 0; nameColorArrayIndex < name_color.length; nameColorArrayIndex++) {
 
-            let editorValue = editor.getValue();
-            const lineContent = editor.getLine(lineIndex);
+            let syntaxRegex = /<font style="[^"]*">[A-Za-z0-9]+<\/font>/i
             
-            let charName: string = name_color[nameColorArrayIndex].name;
-            let color: string = name_color[nameColorArrayIndex].color;
+            let settingName: string = name_color[nameColorArrayIndex].name;
+            let settingColor: string = name_color[nameColorArrayIndex].color;
             let caseSensitive: boolean = name_color[nameColorArrayIndex].caseSensitive;
-
             
-            let namePosition = lineContent.indexOf(charName);
+            let namePosition
+            let updatedLineContent            
             
             //Not Case Sensitive
             if (!caseSensitive) {
-                namePosition = lineContent.toLowerCase().indexOf(charName.toLowerCase())
+                namePosition = lineContent.toLowerCase().indexOf(settingName.toLowerCase())
                 
-                if (lineContent.toLowerCase().contains(charName.toLowerCase())) {
-                    console.log("not case sensitive")
-                    charName = lineContent.substring(namePosition)
-                    console.log(charName)
+                if (lineContent.toLowerCase().contains(settingName.toLowerCase())) {
+                    
+                    settingName = lineContent.substring(namePosition)
+                    
+                    if (lineContent.contains("</font>")) {
+                        settingName = settingName.substring(0, settingName.length - 7)
+                        // console.log(settingName)
+                    }
+
                 }
-            } 
-            
-            let updatedLineContent = editor.getLine(lineIndex).replace(charName, `<font style="color:${color}">${charName}</font>`)
+            } else {
+                namePosition = lineContent.indexOf(settingName);
+            }
+                        
 
+            // If it has a color, check if the color doesn't match and update it
+            if (lineContent.match(syntaxRegex)) {
+                let lineContentColor = lineContent.split('<font style="color:')[1].substring(0, 7);
+                let lineContentName = lineContent.split('<font style="color:' + lineContentColor +'">')[1].slice(0, -7);
 
-            
+                // If name's current color doesn't match settings 
+                if (settingName == lineContentName && settingColor != lineContentColor) {
+                    // console.log(settingName)
+                    updatedLineContent = lineContent.replace(lineContentColor, settingColor)
+                }
+            }
+            // If the name in the editor doesn't have a color, give it one
+            else if (lineContent.includes(settingName)){ 
 
-            // If it doesn't have a color
-            if (!lineContent.contains('<font style="color:') && !lineContent.contains("</font>")) {
                 
+                updatedLineContent = lineContent.replace(settingName, `<font style="color:${settingColor}">${settingName.trim()}</font>`)
+
                 // If name is the very first word
-                if (namePosition <= 1) {
-                    editor.setLine(lineIndex, updatedLineContent);
-                }
-            
-            } 
+                // if (namePosition <= 1) {
+                // }
+            }
 
+            // Update line if there were changes made
+            if (updatedLineContent != null) {
+                editor.setLine(lineIndex, updatedLineContent);
+            }
             
 
-            // Check all arrays
-            for (let nameColorSetIndex in Object.keys(name_color)) {
-                
-                
-            }    
         }  
     } 
 }
